@@ -1,9 +1,9 @@
 {
-	"name": "musicimaged",
+	"name": "musicimage",
 	"authors": [
 		"Peter Wunder"
 	],
-	"description": "Encodes 8-bit WAVs to images",
+	"description": "Encodes 8-bit mono WAVs to images and vice versa",
 	"copyright": "Copyright © 2018, Peter Wunder",
 	"license": "proprietary"
 }

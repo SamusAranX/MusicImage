@@ -25,8 +25,8 @@ class Encoder {
 		this.arbCenterPoint = PointInt(arbCenter, arbCenter);
 	}
 
-	bool encode(real radius, real gap, string outfile) {
-		auto spiral = new Spiral(radius, this.arbCenterPoint, gap);
+	bool encode(real diameter, real gap, string outfile) {
+		auto spiral = new Spiral(diameter, this.arbCenterPoint, gap);
 
 		int minX = arbCenter * 2, maxX = 0;
 		int minY = arbCenter * 2, maxY = 0;
@@ -65,14 +65,18 @@ class Encoder {
 
 		int longerSide = max(rawWidth, rawHeight);
 
-		// Padding size to be +20px max
-		float padding = 2;
+		// Padding size to be +30px max
+		float padding = 3;
 		int finalSize  = cast(int)((floor(cast(float)longerSide / 10) + padding) * 10);
 		auto newCenter = PointInt(finalSize/2, finalSize/2);
 
 		auto image = new TrueColorImage(finalSize, finalSize);
 		auto colorData = image.imageData.colors;
 
+		//writefln("%d×%d", longerSide, longerSide);
+		//writefln("%d×%d", finalSize, finalSize);
+
+		// Second of two loops: Actually creating the image
 		for (int i = 0; i < samplesPadded; i += padSamplesTo) {
 			auto coords = drawCoords[i / 3] - arbCenterPoint + newCenter;
 

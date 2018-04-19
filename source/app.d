@@ -6,7 +6,7 @@ import musicimage: Encoder, Decoder, Spiral, PointInt;
 
 string infile;
 string outfile;
-real radius = 80;
+real diameter = 80;
 real gap = 0.3;
 void main(string[] args) {
 
@@ -15,7 +15,7 @@ void main(string[] args) {
 		"infile|i",  &infile,
 		config.required,
 		"outfile|o", &outfile,
-		"radius|r", &radius,
+		"diameter|d", &diameter,
 		"gap|g", &gap);
 
 	//writeln(infile);
@@ -33,11 +33,11 @@ void main(string[] args) {
 		writefln("Samples: %d", enc.wave.samples.length);
 		writeln("--------------------");
 
-		enc.encode(radius, gap, outfile);
+		enc.encode(diameter, gap, outfile);
 	} else if (endsWith(infile, "png") && endsWith(outfile, "wav")) {
 		// decode file
 		writefln("Opening %s…", infile);
-		auto dec = new Decoder(infile, radius, gap);
+		auto dec = new Decoder(infile, diameter, gap);
 
 		int channels = 1;
 		int sampleRate = 6000;

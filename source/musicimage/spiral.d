@@ -45,8 +45,8 @@ class Spiral {
 	real theta = 0.0;
 	real r;
 
-	this(real startRadius, Point center, real gap = 0.5) {
-		this.startRadius = startRadius / 2;
+	this(real diameter, Point center, real gap = 0.5) {
+		this.startRadius = diameter / 2;
 		this.centerPoint = center;
 		this.gap = gap;
 

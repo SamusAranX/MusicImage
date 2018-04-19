@@ -56,7 +56,7 @@ class WaveWriter {
 			                 sampleRate * channels * bitsPerSample / 8,
 			                 cast(ushort)(channels * bitsPerSample / 8),
 			                 bitsPerSample);
-		//auto dc = DataChunk(HEADER_DATA, cast(uint)samples.length, samples);
+		
 		auto dc = DataChunk(HEADER_DATA, cast(uint)samples.length);
 
 		file.rawWrite((&rh)[0..1]); // Write RIFF header
@@ -64,10 +64,6 @@ class WaveWriter {
 		file.rawWrite((&dc)[0..1]); // Write data chunk
 
 		file.rawWrite(samples);
-
-		//foreach (ubyte s; samples) {
-		//	file.rawWrite(s);
-		//}
 
 		file.close();
 

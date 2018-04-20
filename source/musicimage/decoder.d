@@ -39,7 +39,6 @@ class Decoder {
 		int minX = centerPoint.x * 2, maxX = 0;
 		int minY = centerPoint.y * 2, maxY = 0;
 
-		Color c;
 		int sideLength = this.image.width();
 		uint numberOfEmptyPixels = 0; // empty = fully black or transparent pixels
 
@@ -50,7 +49,13 @@ class Decoder {
 			auto coords = spiral.nextRounded();
 
 			ulong colorDataOffset = cast(ulong)(coords.y * sideLength + coords.x);
-			c = this.colorData[colorDataOffset];
+
+			if (colorDataOffset < 0 || colorDataOffset >= this.colorData.length) {
+				writeln("Image boundaries reached.");
+				break;
+			}
+
+			auto c = this.colorData[colorDataOffset];
 
 			//writefln("Color: 0x%03X 0x%03X 0x%03X 0x%03X", c.r, c.g, c.b, c.a);
 			//writefln("Empty: %02d", numberOfEmptyPixels);

@@ -85,9 +85,9 @@ class Spiral {
 		PointInt roundedCoords = this.next().toPointInt();
 
 		// There's no point in checking all old coordinates
-		// Limiting the number of points to check to 3200
+		// Limiting the number of points to check to 1000
 		// This should only be a problem on obscenely slow computers
-		int maxLastElements = min(this.oldCoords.length, 3200);
+		int maxLastElements = min(this.oldCoords.length, 1000);
 
 		while (this.oldCoords[$-maxLastElements..$].canFind(roundedCoords)) {
 			roundedCoords = this.next().toPointInt();

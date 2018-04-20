@@ -6,8 +6,9 @@ import musicimage: Encoder, Decoder, Spiral, PointInt;
 
 string infile;
 string outfile;
-real diameter = 80;
-real gap = 0.3;
+int diameter = 80;
+double gap = 0.3;
+int sampleRate = 8000;
 void main(string[] args) {
 
 	auto opts = getopt(args,
@@ -16,7 +17,9 @@ void main(string[] args) {
 		config.required,
 		"outfile|o", &outfile,
 		"diameter|d", &diameter,
-		"gap|g", &gap);
+		"gap|g", &gap,
+		"rate|r", &sampleRate
+		);
 
 	//writeln(infile);
 	//writeln(outfile);
@@ -40,7 +43,7 @@ void main(string[] args) {
 		auto dec = new Decoder(infile, diameter, gap);
 
 		int channels = 1;
-		int sampleRate = 6000;
+		int sampleRate = sampleRate;
 		int bitsPerSample = 8;
 
 		dec.decode(channels, sampleRate, bitsPerSample, outfile);

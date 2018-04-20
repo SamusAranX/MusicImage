@@ -66,21 +66,15 @@ class WaveReader {
 
 		assert(wf.SubchunkID == HEADER_FMT);
 
-		if (wf.NumChannels != 1) {
+		if (wf.NumChannels != 1)
 			throw new WaveReaderException("Wave files must not have more than one channel");
-		}
 
-		if (wf.SampleRate > 8000) {
-			throw new WaveReaderException("Wave files must have a sample rate of 8000 Hz or less");
-		}
-
-		if (wf.BitsPerSample != 8) {
+		if (wf.BitsPerSample != 8)
 			throw new WaveReaderException("Wave files must not have more than 8 bits per sample");
-		}
 
-		this.channels   = wf.NumChannels;
-		this.sampleRate = wf.SampleRate;
-		this.bitsPerSample    = wf.BitsPerSample;
+		this.channels      = wf.NumChannels;
+		this.sampleRate    = wf.SampleRate;
+		this.bitsPerSample = wf.BitsPerSample;
 
 		// Skip LIST chunk, if present
 		uint maybeList;

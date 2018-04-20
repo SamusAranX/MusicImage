@@ -66,7 +66,7 @@ class Encoder {
 		int longerSide = max(rawWidth, rawHeight);
 
 		// Padding size to be +30px max
-		float padding = 3;
+		float padding = 4;
 		int finalSize  = cast(int)((floor(cast(float)longerSide / 10) + padding) * 10);
 		auto newCenter = PointInt(finalSize/2, finalSize/2);
 

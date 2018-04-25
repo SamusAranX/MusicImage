@@ -5,6 +5,8 @@ import std.algorithm.comparison;
 import std.math;
 import std.conv;
 
+import core.exception;
+
 import simplewave: WaveReader;
 import arsd.png: TrueColorImage, Color, writePng;
 import musicimage.spiral;
@@ -80,14 +82,27 @@ class Encoder {
 		for (int i = 0; i < samplesPadded; i += padSamplesTo) {
 			auto coords = drawCoords[i / 3] - arbCenterPoint + newCenter;
 
-			ubyte r, g, b;
-			r = wave.samples[i + 0];
-			g = wave.samples[i + 1];
-			b = wave.samples[i + 2];
+			// not gonna bother checking of wave.samples actually has enough elements
+			// once we've reached the end of the sample array, there will be at most
+			// 3 caught exceptions, which is negligible.
 
-			//writefln("Sample: 0x%02X 0x%02X 0x%02X (%02.3f%%)", r, g, b, cast(float)i / samplesPadded * 100);
+			ubyte r, g, b;
+			try
+				r = wave.samples[i + 0];
+			catch (RangeError e)
+				r = 0;
+
+			try
+				g = wave.samples[i + 1];
+			catch (RangeError e)
+				g = 0;
+
+			try
+				b = wave.samples[i + 2];
+			catch (RangeError e)
+				b = 0;
 			
-			ulong colorDataOffset = cast(ulong)(coords.y * finalSize + coords.x);
+			uint colorDataOffset = cast(uint)(coords.y * finalSize + coords.x);
 			colorData[colorDataOffset] = Color(r, g, b);
 		}
 

@@ -2,7 +2,13 @@ import std.stdio;
 import std.getopt: config, getopt;
 import std.algorithm.searching: endsWith;
 
+import std.conv: to;
+
 import musicimage: Encoder, Decoder, Spiral, PointInt;
+//import simplepng: PngReader, PngHeaders;
+
+// It seems that there's no way to set the version
+// of an app written in D, which sucks
 
 string infile;
 string outfile;
@@ -19,10 +25,9 @@ void main(string[] args) {
 		"diameter|d", &diameter,
 		"gap|g", &gap,
 		"rate|r", &sampleRate
-		);
+	);
 
-	//writeln(infile);
-	//writeln(outfile);
+	//auto p = new PngReader(infile);
 
 	if (endsWith(infile, "wav") && endsWith(outfile, "png")) {
 		// encode file
@@ -31,9 +36,14 @@ void main(string[] args) {
 
 		writeln("--------------------");
 		writefln("Channels: %d", enc.wave.channels);
+		writefln("Bits per sample: %d", enc.wave.bitsPerSample);
 		writefln("Sample rate: %d Hz", enc.wave.sampleRate);
-		writefln("Bit rate: %d", enc.wave.bitsPerSample);
 		writefln("Samples: %d", enc.wave.samples.length);
+
+		ulong seconds = (enc.wave.samples.length / enc.wave.sampleRate) % 60;
+		ulong minutes = (enc.wave.samples.length / enc.wave.sampleRate) / 60;
+
+		writefln("Duration: %02d:%02d", minutes, seconds);
 		writeln("--------------------");
 
 		enc.encode(diameter, gap, outfile);

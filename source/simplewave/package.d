@@ -1,3 +1,5 @@
 module simplewave;
 
-public import simplewave.wavereader, simplewave.wavewriter;
+public import simplewave.wavereader,
+              simplewave.wavewriter,
+              simplewave.exceptions;

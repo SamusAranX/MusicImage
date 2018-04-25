@@ -41,14 +41,15 @@ class Decoder {
 
 		int sideLength = this.image.width();
 		uint numberOfEmptyPixels = 0; // empty = fully black or transparent pixels
+		uint emptyPixelLimit = 10;
 
 		writeln("Processing pixels…");
 
 		ubyte[] samples;
-		while (numberOfEmptyPixels < 10) {
+		while (numberOfEmptyPixels < emptyPixelLimit) {
 			auto coords = spiral.nextRounded();
 
-			ulong colorDataOffset = cast(ulong)(coords.y * sideLength + coords.x);
+			uint colorDataOffset = cast(uint)(coords.y * sideLength + coords.x);
 
 			if (colorDataOffset < 0 || colorDataOffset >= this.colorData.length) {
 				writeln("Image boundaries reached.");
@@ -68,8 +69,10 @@ class Decoder {
 			samples ~= [c.r, c.g, c.b];
 		}
 
-		// remove "empty" samples from the end of the array
-		samples = samples[0..$-numberOfEmptyPixels*3];
+		if (numberOfEmptyPixels == emptyPixelLimit) {
+			// remove "empty" samples from the end of the array
+			samples = samples[0..$-emptyPixelLimit*3];
+		}
 
 		writefln("Total samples read: %d", samples.length);
 		writefln("Writing %d samples to %s…", samples.length, outfile);

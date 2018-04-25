@@ -7,9 +7,7 @@ import std.range,
        std.stdio,
        std.exception;
 
-static class WaveReaderException : Exception {
-    mixin basicExceptionCtors;
-}
+import simplewave.exceptions;
 
 class WaveReader {
 	immutable uint HEADER_RIFF = 0x46464952;

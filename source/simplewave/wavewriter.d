@@ -6,10 +6,8 @@ import std.range,
        std.string,
        std.stdio,
        std.exception;
-
-static class WaveWriterException : Exception {
-    mixin basicExceptionCtors;
-}
+       
+import simplewave.exceptions;
 
 class WaveWriter {
 	immutable uint HEADER_RIFF = 0x46464952;

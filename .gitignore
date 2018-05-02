@@ -23,5 +23,12 @@ docs/
 # Code coverage
 *.lst
 
+# macOS garbage files
+.DS_Store
+
+# Test files
+test.png
+test16.png
+
 # The actual binary
 musicimage

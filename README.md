@@ -8,11 +8,17 @@ Creates fancy vinyl-like PNGs from music files
 ## Download
 There are no releases, you'll have to build MusicImage yourself. It's as easy as `dub build` in the project folder though.
 
+I recommend using `ldc`, as the resulting binary will run **much** faster than the `dmd` version.
+
+```
+dub build --compiler ldc2 -b release --parallel
+```
+
 ## Usage
 * `-i`/`--infile`: The input file. Can be either a `.png` or a `.wav` file. *(Required)*
 * `-o`/`--outfile`: The output file. Can be either a `.png` or a `.wav` file, but mustn't have the same extension as `-i`. *(Required)*
 * `-r`/`--rate`: Sample rate override. Only used when decoding PNGs to WAVs. *(Optional. Default: **8000**)*
-* `-d`/`--diameter`: The diameter of the hole in the middle of the spiral. *(Optional. Default: **80**)*
+* `-d`/`--diameter`: The diameter of the hole in the middle of the spiral. Can be used to insert downscaled album art. *(Optional. Default: **80**)*
 * `-g`/`--gap`: Gap size multiplier. Because of Reasons™, the smaller this value is, the slower MusicImage will run. *(Optional. Default: **0.3**)*
 
 ## Example

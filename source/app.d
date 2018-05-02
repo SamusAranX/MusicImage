@@ -5,10 +5,8 @@ import std.algorithm.searching: endsWith;
 import std.conv: to;
 
 import musicimage: Encoder, Decoder, Spiral, PointInt;
-//import simplepng: PngReader, PngHeaders;
-
-// It seems that there's no way to set the version
-// of an app written in D, which sucks
+import simplepng: PNGReader;
+import simplepng.png: Color;
 
 string infile;
 string outfile;
@@ -16,7 +14,7 @@ int diameter = 80;
 double gap = 0.3;
 int sampleRate = 8000;
 void main(string[] args) {
-
+	
 	auto opts = getopt(args,
 		config.required,
 		"infile|i",  &infile,
@@ -27,7 +25,14 @@ void main(string[] args) {
 		"rate|r", &sampleRate
 	);
 
-	//auto p = new PngReader(infile);
+	//auto p = PNGReader.readPNG(infile);
+	//for (uint y = 0; y < p.height; y++) {
+	//	for (uint x = 0; x < p.width; x++) {
+	//		writefln("%d×%d: %s", x, y, p.pixels[x][y]);
+	//	}
+	//}
+	//foreach(Color c; p.pixels1D)
+	//	writeln(c);
 
 	if (endsWith(infile, "wav") && endsWith(outfile, "png")) {
 		// encode file

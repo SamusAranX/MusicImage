@@ -34,7 +34,7 @@ class Decoder {
 	}
 
 	bool decode(int channels, int sampleRate, int bitsPerSample, string outfile) {
-		auto spiral = new Spiral(this.holeDiameter, this.centerPoint, this.gap);
+		auto spiral = new Spiral(this.holeDiameter, this.centerPoint, this.gap, this.centerPoint.x * 2);
 
 		int minX = centerPoint.x * 2, maxX = 0;
 		int minY = centerPoint.y * 2, maxY = 0;

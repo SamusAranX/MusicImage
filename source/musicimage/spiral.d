@@ -44,28 +44,30 @@ class Spiral {
 	Point centerPoint;
 	real theta = 0.0;
 	real r;
+	int maxLastElements;
 
-	this(real diameter, Point center, real gap = 0.5) {
+	this(real diameter, Point center, real gap = 0.5, int hint = 318) {
 		this.startRadius = diameter / 2;
 		this.centerPoint = center;
 		this.gap = gap;
 
 		this.r = startRadius;
+		this.maxLastElements = cast(int)(PI * hint);
 	}
 
-	this(real startRadius, PointInt center, real gap = 0.5) {
+	this(real startRadius, PointInt center, real gap = 0.5, int hint = 318) {
 		auto centerPoint = Point(cast(real)center.x, cast(real)center.y);
-		this(startRadius, centerPoint, gap);
+		this(startRadius, centerPoint, gap, hint);
 	}
 
-	this(real startRadius, int center, real gap = 0.5) {
+	this(real startRadius, int center, real gap = 0.5, int hint = 318) {
 		auto centerPoint = Point(cast(real)center, cast(real)center);
-		this(startRadius, centerPoint, gap);
+		this(startRadius, centerPoint, gap, hint);
 	}
 
-	this(real startRadius, real center, real gap = 0.5) {
+	this(real startRadius, real center, real gap = 0.5, int hint = 318) {
 		auto centerPoint = Point(center, center);
-		this(startRadius, centerPoint, gap);
+		this(startRadius, centerPoint, gap, hint);
 	}
 
 	Point next() {
@@ -85,11 +87,10 @@ class Spiral {
 		PointInt roundedCoords = this.next().toPointInt();
 
 		// There's no point in checking all old coordinates
-		// Limiting the number of points to check to 1000
 		// This should only be a problem on obscenely slow computers
-		int maxLastElements = min(this.oldCoords.length, 1000);
+		int maxLastElements_ = min(this.oldCoords.length, this.maxLastElements);
 
-		while (this.oldCoords[$-maxLastElements..$].canFind(roundedCoords)) {
+		while (this.oldCoords[$-maxLastElements_..$].canFind(roundedCoords)) {
 			roundedCoords = this.next().toPointInt();
 		}
 

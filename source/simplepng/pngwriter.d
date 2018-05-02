@@ -7,8 +7,15 @@ import std.range,
        std.stdio,
        std.exception;
 
-class PngWriter {
+import simplepng.headers;
+import simplepng.exceptions;
+import simplepng.filters;
+import simplepng.png;
 
-	
+class PNGWriter {
+
+	static void writePNG(PNG png, string fname) {
+		
+	}
 	
 }

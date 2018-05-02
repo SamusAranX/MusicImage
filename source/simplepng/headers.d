@@ -3,18 +3,96 @@ module simplepng.headers;
 import std.bitmanip: bigEndianToNative, nativeToBigEndian;
 import std.conv: to;
 
-class PngHeaders {
+//
+// Constants
+//
+
+immutable static ulong PNG_SIGNATURE = 0x89504E470D0A1A0A; // first 8 bytes
+
+//
+// Chunk types
+//
+
+static enum PNG_CHUNKTYPE: uint {
+	// critical chunks
+	IHDR = 0x49484452, // IHDR
+	PLTE = 0x504C5445, // PLTE
+	IDAT = 0x49444154, // IDAT
+	IEND = 0x49454E44, // IEND
+
+	// non-critical chunks start here
+	CHRM = 0x6348524D, // cHRM
+	GAMA = 0x67414D41, // gAMA
+	ICCP = 0x69434350, // iCCP
+	SBIT = 0x73424954, // sBIT
+	SRGB = 0x73524742, // sRGB
+	BKGD = 0x624B4744, // bKGD
+	HIST = 0x68495354, // hIST
+	TRNS = 0x74524E53, // tRNS
+	PHYS = 0x70485973, // pHYs
+	SPLT = 0x73504C54, // sPLT
+	TIME = 0x74494D45, // tIME
+	ITXT = 0x69545874, // iTXt
+	TEXT = 0x74455874, // tEXt
+	ZTXT = 0x7A545874, // zTXt
+}
+
+//
+// IHDR Chunk
+//
+
+static enum IHDR_BitDepth: ubyte {
+	BitDepth1  = 1,
+	BitDepth2  = 2,
+	BitDepth4  = 4,
+	BitDepth8  = 8,
+	BitDepth16 = 16
+}
+
+static enum IHDR_ColorType: ubyte {
+	Greyscale      = 0,
+	TrueColor      = 2,
+	Indexed        = 3,
+	GreyscaleAlpha = 4,
+	TrueColorAlpha = 6
+}
+
+static enum IHDR_CompressionMethod: ubyte {
+	Deflate = 0
+}
+
+static enum IHDR_FilterMethod: ubyte {
+	Adaptive = 0
+}
+
+static enum IHDR_InterlaceMethod: ubyte {
+	NoInterlace    = 0,
+	Adam7Interlace = 1
+}
+
+//
+// Header class
+//
+
+class PNGHeaders {
 
 	//template MakeAutoProperties(string name, string type) {
 	//	const char[] props = "@property " ~ type ~ " " ~ name ~ "() { return bigEndianToNative!" ~ type ~ "(" ~ name ~ "!_); }\n"~
 	//	"@property void " ~ name ~ "(" ~ type ~ " v) { " ~ name ~ "_ = nativeToBigEndian!" ~ type ~ "(v); }";
 	//}
 
-	struct MakeStructStruct {
+	struct StructField {
 		string typeName;
 		uint   typeSize;
 		string fieldName;
 		string castFrom = "";
+	}
+
+	struct PngChunk {
+		uint length;
+		uint type;
+		ubyte[] data;
+		uint crc;
 	}
 
 	//@property uint Width() { return bigEndianToNative!uint(Width_); }
@@ -22,10 +100,10 @@ class PngHeaders {
 	//@property IHDR_BitDepth BitDepth() { return cast(IHDR_BitDepth)bigEndianToNative!uint(BitDepth_); }
 	//@property void BitDepth(IHDR_BitDepth v) { BitDepth_ = v; }
 	//@property void BitDepth(ubyte v) { BitDepth_ = cast(IHDR_BitDepth)nativeToBigEndian!ubyte(v); }
-	static string MakeStruct(string name, MakeStructStruct[] fields) {
+	static string MakeBEStruct(string name, StructField[] fields) {
 		string str = "struct " ~ name ~ "{\n\talign(1):\n";
 
-		foreach (MakeStructStruct field; fields) {
+		foreach (StructField field; fields) {
 			string tn = field.typeName;
 			string ts = to!string(field.typeSize);
 			string fn = field.fieldName; // the field name, e.g. "Width"
@@ -64,91 +142,16 @@ class PngHeaders {
 		return str;
 	}
 
-	immutable static ulong PNG_SIGNATURE = 0x89504E470D0A1A0A; // first 8 bytes
-	immutable static uint  PNG_IHDR      = 0x49484452; // IHDR
-
-	static enum PNG_CHUNKTYPE: uint {
-		// critical chunks
-		IHDR = 0x49484452, // IHDR
-		PLTE = 0x504C5445, // PLTE
-		IDAT = 0x49444154, // IDAT
-		IEND = 0x49454E44, // IEND
-
-		// non-critical chunks start here
-		CHRM = 0x6348524D, // cHRM
-		GAMA = 0x67414D41, // gAMA
-		ICCP = 0x69434350, // iCCP
-		SBIT = 0x73424954, // sBIT
-		SRGB = 0x73524742, // sRGB
-		BKGD = 0x624B4744, // bKGD
-		HIST = 0x68495354, // hIST
-		TRNS = 0x74524E53, // tRNS
-		PHYS = 0x70485973, // pHYs
-		SPLT = 0x73504C54, // sPLT
-		TIME = 0x74494D45, // tIME
-		ITXT = 0x69545874, // iTXt
-		TEXT = 0x74455874, // tEXt
-		ZTXT = 0x7A545874, // zTXt
-	}
-
-	//
-	// IHDR Chunk
-	//
-
-	static enum IHDR_BitDepth: ubyte {
-		BitDepth1  = 1,
-		BitDepth2  = 2,
-		BitDepth4  = 4,
-		BitDepth8  = 8,
-		BitDepth16 = 16
-	}
-
-	static enum IHDR_ColorType: ubyte {
-		Greyscale      = 0,
-		TrueColor      = 2,
-		Indexed        = 3,
-		GreyscaleAlpha = 4,
-		TrueColorAlpha = 6
-	}
-
-	static enum IHDR_CompressionMethod: ubyte {
-		Deflate = 0
-	}
-
-	static enum IHDR_FilterMethod: ubyte {
-		Adaptive = 0
-	}
-
-	static enum IHDR_InterlaceMethod: ubyte {
-		NoInterlace    = 0,
-		Adam7Interlace = 1
-	}
-
-	mixin(MakeStruct("IHDR",
+	mixin(MakeBEStruct("IHDR",
 		[
-			MakeStructStruct("uint", 4,                   "Width"),
-			MakeStructStruct("uint", 4,                   "Height"),
-			MakeStructStruct("IHDR_BitDepth", 1,          "BitDepth",          "ubyte"),
-			MakeStructStruct("IHDR_ColorType", 1,         "ColorType",         "ubyte"),
-			MakeStructStruct("IHDR_CompressionMethod", 1, "CompressionMethod", "ubyte"),
-			MakeStructStruct("IHDR_FilterMethod", 1,      "FilterMethod",      "ubyte"),
-			MakeStructStruct("IHDR_InterlaceMethod", 1,   "InterlaceMethod",   "ubyte"),
+			StructField("uint", 4,                   "Width"),
+			StructField("uint", 4,                   "Height"),
+			StructField("IHDR_BitDepth", 1,          "BitDepth",          "ubyte"),
+			StructField("IHDR_ColorType", 1,         "ColorType",         "ubyte"),
+			StructField("IHDR_CompressionMethod", 1, "CompressionMethod", "ubyte"),
+			StructField("IHDR_FilterMethod", 1,      "FilterMethod",      "ubyte"),
+			StructField("IHDR_InterlaceMethod", 1,   "InterlaceMethod",   "ubyte"),
 		]
 	));
-
-	//struct IHDR {
-	//	align(1): // don't pad this struct so .sizeof works properly
-	//	uint Width;
-	//	uint Height;
-	//	IHDR_BitDepth BitDepth;
-	//	IHDR_ColorType ColorType;
-	//	IHDR_CompressionMethod CompressionMethod;
-	//	IHDR_FilterMethod FilterMethod;
-	//	IHDR_InterlaceMethod InterlaceMethod;
-
-	//	//@property uint Width() { return bigEndianToNative!uint(Width_); }
-	//	//@property void Width(uint w) { Width_ = nativeToBigEndian!uint(w); }
-	//	//@property uint Height() { return bigEndianToNative(Height_); }
-	//}
 
 }

@@ -2,6 +2,6 @@ module simplepng.exceptions;
 
 import std.exception;
 
-static class PngException : Exception {
+static class PNGException : Exception {
     mixin basicExceptionCtors;
 }

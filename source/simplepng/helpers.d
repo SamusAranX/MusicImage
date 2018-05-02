@@ -1,6 +1,6 @@
 module simplepng.helpers;
 
-class PngHelpers {
+class PNGHelpers {
 
 	static uint[256] crc_table;
 	static bool      crc_table_computed;
